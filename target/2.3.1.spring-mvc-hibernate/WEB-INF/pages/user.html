@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User</title>
+    <style>
+        /* Добавим немного стилей для вертикального расположения */
+        .form-container {
+            max-width: 400px;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .form-actions {
+            margin-top: 10px;
+        }
+        .form-actions button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- Если user.id == null, показываем форму для добавления -->
+<div th:if="${user.id == null}" class="form-container">
+    <h2>Add New User</h2>
+    <form th:action="@{/users}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" th:field="*{name}" id="name" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" th:field="*{email}" id="email" />
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" th:field="*{age}" id="age" />
+        </div>
+        <div class="form-group">
+            <label for="salary">Salary:</label>
+            <input type="number" th:field="*{salary}" id="salary" />
+        </div>
+        <div class="form-actions">
+            <button type="submit">Add User</button>
+            <a th:href="@{/users}">Back to Users List</a>
+        </div>
+    </form>
+</div>
+
+<!-- Если user.id != null, показываем данные пользователя -->
+<div th:if="${user.id != null}" class="form-container">
+    <h2>User Details</h2>
+    <p>ID: <span th:text="${user.id}"></span></p>
+    <p>Name: <span th:text="${user.name}"></span></p>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Age: <span th:text="${user.age}"></span></p>
+    <p>Salary: <span th:text="${user.salary}"></span></p>
+    <div class="form-actions">
+        <a th:href="@{/users/{id}/update(id=${user.id})}">Update</a>
+        <a th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a>
+        <a th:href="@{/users}">Back to Users List</a>
+    </div>
+</div>
+</body>
+</html>
