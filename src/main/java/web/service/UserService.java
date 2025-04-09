@@ -1,17 +1,40 @@
 package web.service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
 
 import java.util.List;
 
-public interface UserService {
-    void save(User user);
+@Service
+@Transactional
+public class UserService {
 
-    User findById(Long id);
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    List<User> findAll();
+    public List<User> findAll() {
+        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+    }
 
-    void update(Long id, String username, String email, Integer age, Double salary);
+    public User findById(Long id) {
+        return entityManager.find(User.class, id);
+    }
 
-    void delete(Long id);
+    public void save(User user) {
+        if (user.getId() == null) {
+            entityManager.persist(user);
+        } else {
+            entityManager.merge(user);
+        }
+    }
+
+    public void delete(Long id) {
+        User user = findById(id);
+        if (user != null) {
+            entityManager.remove(user);
+        }
+    }
 }

@@ -24,6 +24,12 @@ public class UserController {
         return "users";
     }
 
+    @GetMapping("/new")
+    public String showAddUserPage(Model model) {
+        model.addAttribute("user", new User());
+        return "user";
+    }
+
     @PostMapping
     public String addUser(@ModelAttribute("user") User user) {
         userService.save(user);
@@ -32,13 +38,21 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String getUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.findById(id));
+        User user = userService.findById(id);
+        if (user == null) {
+            throw new RuntimeException("User with ID " + id + " not found");
+        }
+        model.addAttribute("user", user);
         return "user";
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/{id}/update")
     public String showUserUpdatePage(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.findById(id));
+        User user = userService.findById(id);
+        if (user == null) {
+            throw new RuntimeException("User with ID " + id + " not found");
+        }
+        model.addAttribute("user", user);
         return "update";
     }
 
@@ -59,15 +73,10 @@ public class UserController {
         return "delete";
     }
 
+    @PostMapping("/{id}/delete")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
         return "redirect:/users";
-    }
-
-    @GetMapping("/new")
-    public String showAddUserPage(Model model) {
-        model.addAttribute("user", new User()); // Пустой объект User для формы
-        return "user"; // Возвращаем шаблон user.html
     }
 
     @ExceptionHandler(RuntimeException.class)

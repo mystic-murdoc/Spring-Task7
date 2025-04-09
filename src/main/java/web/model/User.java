@@ -10,18 +10,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "age")
     private Integer age;
-
-    @Column(name = "salary")
     private Double salary;
 
+    // Конструкторы
     public User() {
     }
 
